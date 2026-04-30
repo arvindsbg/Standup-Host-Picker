@@ -136,7 +136,7 @@ export const SpinningWheel = ({
     // Calculate which item will be selected (pointer is at top)
     const segmentAngle = 360 / items.length;
     const normalizedRotation = (totalRotation % 360 + 360) % 360;
-    const selectedIdx = Math.floor((360 - normalizedRotation) / segmentAngle) % items.length;
+    const selectedIdx = Math.floor(normalizedRotation / segmentAngle) % items.length;
 
     setSelectedIndex(selectedIdx);
 
