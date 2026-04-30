@@ -118,7 +118,7 @@ export const SpinningWheel = ({
     ctx.lineTo(centerX - 10, 30);
     ctx.lineTo(centerX + 10, 30);
     ctx.closePath();
-    ctx.fillStyle = '#06b6d4';
+    ctx.fillStyle = '#000000';
     ctx.fill();
   }, [items, rotation]);
 
