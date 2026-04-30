@@ -128,32 +128,52 @@ export const SpinningWheel = ({
     // Play spin start sound
     playSpinStart();
 
+    const startRotation = rotation; // Get the current angle of the wheel
+
     // Generate random rotation (at least 5 full rotations + random offset)
     const minRotation = 1800; // 5 full rotations
     const randomOffset = Math.random() * 360;
-    const totalRotation = minRotation + randomOffset;
+    const additionalRotation = minRotation + randomOffset;
+    
+    // The final angle the wheel will land on
+    const finalRotation = startRotation + additionalRotation;
 
-    // Calculate which item will be selected (pointer is at top)
+    // Calculate which item will be selected (pointer is at top = 270 degrees in canvas space)
     const segmentAngle = 360 / items.length;
-    const normalizedRotation = (totalRotation % 360 + 360) % 360;
-    const selectedIdx = Math.floor(normalizedRotation / segmentAngle) % items.length;
+    const normalizedRotation = finalRotation % 360;
+    
+    // Canvas 0 is right (3 o'clock). Top pointer is at 270 degrees.
+    // Calculate the item whose angle segment overlaps 270 degrees factoring in the rotation
+    const topOffset = (270 - normalizedRotation + 360) % 360;
+    const selectedIdx = Math.floor(topOffset / segmentAngle) % items.length;
+
+    console.log("--- SPIN TRIGGERED ---");
+    console.log(`Available Items:`, items);
+    console.log(`Start Rotation: ${startRotation}`);
+    console.log(`Additional Rotation: ${additionalRotation}`);
+    console.log(`Final Absolute Rotation: ${finalRotation}`);
+    console.log(`Normalized Position: ${normalizedRotation}`);
+    console.log(`Segment Angle: ${segmentAngle} degrees`);
+    console.log(`Top Offset (Canvas): ${topOffset} degrees`);
+    console.log(`Calculated Selected Index: ${selectedIdx}`);
+    console.log(`Calculated Selected Item:`, items[selectedIdx]);
 
     setSelectedIndex(selectedIdx);
 
     // Animate the rotation
-    const startRotation = rotation;
     const startTime = Date.now();
     const duration = 3000; // 3 seconds
 
     const animate = () => {
-      const elapsed = Date.now() - startTime;
+      const now = Date.now();
+      const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Ease-out cubic for satisfying deceleration
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-      const currentRotation = startRotation + totalRotation * easeProgress;
-
-      setRotation(currentRotation);
+      
+      // Easing function (easeOutQuart)
+      const easeProgress = 1 - Math.pow(1 - progress, 4);
+      
+      // We apply the additionalRotation relative to the startRotation
+      setRotation(startRotation + additionalRotation * easeProgress);
 
       if (progress < 1) {
         requestAnimationFrame(animate);
