@@ -42,7 +42,7 @@ export const DEFAULT_TEAMS: Team[] = [
     description: 'Backend Development - Pricing Tribe',
     members: [
       { id: 'be-1', name: 'Paul' },
-      { id: 'be-2', name: 'Barron' },
+      { id: 'be-2', name: 'James' },
       { id: 'be-3', name: 'Phil' },
       { id: 'be-4', name: 'SBL' },
       { id: 'be-5', name: 'Alex' },
